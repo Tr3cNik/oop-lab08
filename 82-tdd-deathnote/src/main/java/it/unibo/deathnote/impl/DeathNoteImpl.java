@@ -47,7 +47,7 @@ public class DeathNoteImpl implements DeathNote {
      */
     @Override
     public boolean writeDeathCause(final String cause) {
-        if (cause == null || isNameWritten(lastName)) {
+        if (cause == null || lastName == null || !isNameWritten(lastName)) {
             throw new IllegalStateException(cause + "is null, or the name is not written");
         }
         if (System.currentTimeMillis() - timeLastName > TIME_FOR_DEATH_CAUSES) {
@@ -62,7 +62,7 @@ public class DeathNoteImpl implements DeathNote {
      */
     @Override
     public boolean writeDetails(final String details) {
-        if (details == null || isNameWritten(lastName)) {
+        if (details == null || lastName == null || !isNameWritten(lastName)) {
             throw new IllegalStateException(details + "is null, or the name is not written");
         }
         if (System.currentTimeMillis() - timeLastName > TIME_FOR_DEATH_DETAILS) {
