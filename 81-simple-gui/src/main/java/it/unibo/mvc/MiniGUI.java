@@ -4,11 +4,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,6 +46,11 @@ public class MiniGUI {
         canvas.remove(write);
         canvas.add(canvas2, BorderLayout.CENTER);
         canvas2.add(write);
+        /*
+         * Part 2
+         */
+        final JTextField text = new JTextField("Result");
+        canvas.add(text, BorderLayout.NORTH);
 
         /* 
          * Handlers
@@ -54,7 +58,9 @@ public class MiniGUI {
         write.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                System.out.println(randomGenerator.nextInt()); // NOPMD
+                final var rand = Integer.toString(randomGenerator.nextInt());
+                text.setText(rand);
+                System.out.println(rand); // NOPMD
             }
         });
     }
