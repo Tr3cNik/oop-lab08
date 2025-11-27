@@ -4,7 +4,11 @@ import it.unibo.mvc.api.DrawNumber;
 import it.unibo.mvc.api.DrawNumberController;
 import it.unibo.mvc.api.DrawNumberView;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * This class implements the game controller. It orchestrates the game, exposes methods to its observers
@@ -13,7 +17,7 @@ import java.util.Objects;
 public final class DrawNumberControllerImpl implements DrawNumberController {
 
     private final DrawNumber model;
-    private DrawNumberView view;
+    private final List<DrawNumberView> views = new LinkedList<>();
 
     /**
      * Builds a new game controller provided a game model.
@@ -24,27 +28,40 @@ public final class DrawNumberControllerImpl implements DrawNumberController {
         this.model = model;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void addView(final DrawNumberView view) {
         Objects.requireNonNull(view, "Cannot set a null view");
-        if (this.view != null) {
-            throw new IllegalStateException("The view is already set! Multiple views are not supported");
-        }
-        this.view = view;
+        views.add(view);
         view.setController(this);
         view.start();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void newAttempt(final int n) {
-        Objects.requireNonNull(view, "There is no view attached!").result(model.attempt(n));
+        Objects.requireNonNull(views.getFirst(), "There is no view attached!");
+        for (final DrawNumberView view: views) {
+            view.result(model.attempt(n));
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void resetGame() {
         this.model.reset();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressFBWarnings
     @Override
     public void quit() {
         /*
